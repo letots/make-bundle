@@ -17,8 +17,6 @@
             attr: { class: 'w-full p-2 border rounded' }
         }) }}
 
-        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
-
         <div class="flex justify-between items-center">
             <a href="{{ path('app_login') }}" class="text-sm text-blue-600 hover:underline">
                 {{ 'form.forgot_password'|trans({}, 'security.login') }}

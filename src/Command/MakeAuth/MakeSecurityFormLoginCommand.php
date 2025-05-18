@@ -50,8 +50,9 @@ class MakeSecurityFormLoginCommand extends Command
 		$this->overrideAppAuthenticator($io);
 		$this->removeFormLoginPartFromSecurityConfig($io);
 		$this->moveSecurityController($io);
-		$loginTypeName = $this->getLoginTypeName($io);
-		$this->createLoginType($io, $output, $loginTypeName);
+		if($loginTypeName = $this->getLoginTypeName($io)) {
+			$this->createLoginType($io, $output, $loginTypeName);
+		}
 		$this->changeSecurityController($io, $loginTypeName);
 		$io->text('Création des fichiers :');
 		$this->generateLayoutTemplate($io);
@@ -89,7 +90,7 @@ class MakeSecurityFormLoginCommand extends Command
 			];
 		}
 		
-		$yaml = Yaml::dump($yaml, 2);
+		$yaml = Yaml::dump($yaml, 10);
 		file_put_contents($securityConfigPath, $yaml);
 		
 		$io->text('Le fichier security.yaml a été modifié.');
@@ -117,13 +118,13 @@ class MakeSecurityFormLoginCommand extends Command
 		$io->text('Le fichier SecurityController.php a été déplacé vers le répertoire src/Controller/Security.');
 	}
 	
-	private function getLoginTypeName(ConsoleStyle $io): string
+	private function getLoginTypeName(ConsoleStyle $io): ?string
 	{
 		$loginTypeName = 'LoginType';
 		
 		while (class_exists('App\\Form\\Security\\' . $loginTypeName)) {
-			$loginTypeName = $io->ask('La classe App\\Form\Security\\' . $loginTypeName . ' existe déjà. Choisissez un nom de classe pour le formulaire de connexion. (ex: LoginType)', null, function (string $answer): string {
-				if ($answer === '' || preg_match('/^[A-Z][a-zA-Z0-9]*Type$/', $answer) !== 1) {
+			$loginTypeName = $io->ask('La classe App\\Form\Security\\' . $loginTypeName . ' existe déjà. Choisissez un nom de classe pour le formulaire de connexion. (ex: LoginType).  Validez sans aucune valeur pour ne pas créer de formulaire.', null, function (?string $answer): ?string {
+				if ($answer && preg_match('/^[A-Z][a-zA-Z0-9]*Type$/', $answer) !== 1) {
 					throw new \RuntimeException("Le nom de la classe doit commencer par une majuscule, ne doit pas contenir d\'espaces ou de caractères spéciaux, et doit se terminer par 'Type'.");
 				}
 				
@@ -164,7 +165,7 @@ class MakeSecurityFormLoginCommand extends Command
 			$fileSystem->rename($oldPath, $newPath);
 			
 			$contents = file_get_contents($newPath);
-			$contents = str_replace('class LoginFormType', 'class ' . $loginTypeName, $contents);
+			$contents = str_replace('class LoginTypeForm', 'class ' . $loginTypeName, $contents);
 			file_put_contents($newPath, $contents);
 			
 			$io->text('Le fichier ' . $oldPath . ' a été renommé en ' . $newPath);
@@ -222,6 +223,9 @@ class MakeSecurityFormLoginCommand extends Command
             <?php
             $resolver->setDefaults([
             	'translation_domain' => 'security.login',
+            	'csrf_protection' => true,
+            	'csrf_field_name' => '_token',
+            	'csrf_token_id'   => 'authenticate',
             ]);
             CODE
 		);
@@ -231,10 +235,11 @@ class MakeSecurityFormLoginCommand extends Command
 	/**
 	 * @throws Exception
 	 */
-	private function changeSecurityController(ConsoleStyle $io, string $loginTypeName): void
+	private function changeSecurityController(ConsoleStyle $io, ?string $loginTypeName): void
 	{
 		$controllerPath = $this->commandService->getProjectDir() . '/src/Controller/Security/SecurityController.php';
 		$manipulator = $this->commandService->createClassManipulator($controllerPath, $io, true);
+		$loginTypeName = $loginTypeName ?? 'LoginType';
 		$this->addUseStatementsForSecurityController($manipulator, $loginTypeName);
 		$this->addLoginMethodForSecurityController($manipulator, $loginTypeName);
 		$this->generator->dumpFile($controllerPath, $manipulator->getSourceCode());

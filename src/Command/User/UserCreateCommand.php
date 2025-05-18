@@ -65,7 +65,7 @@ class UserCreateCommand extends Command
 				$user->setPassword($this->passwordHasher->hashPassword($user, 'root'));
 				$this->entityManager->persist($user);
 				$this->entityManager->flush();
-				$io->text('Utilisateur admin@akyos.com créé.');
+				$io->text('Utilisateur admin@admin.com créé.');
 			} catch (Exception $e) {
 				$io->error('Erreur lors de la création de l\'utilisateur : ' . $e->getMessage());
 				return Command::FAILURE;
@@ -82,7 +82,7 @@ class UserCreateCommand extends Command
 	
 	private function getKeepExistingUser(ConsoleStyle $io): bool
 	{
-		return $this->commandService->askYN($io, 'L\'utilisateur admin@akyos.com existe déjà, souhaitez vous le conserver ? Si non, il sera supprimé et remplacé par un nouveau compte. (n/y)') === 'y';
+		return $this->commandService->askYN($io, 'L\'utilisateur admin@admin.com existe déjà, souhaitez vous le conserver ? Si non, il sera supprimé et remplacé par un nouveau compte. (n/y)') === 'y';
 	}
 	
 	private function getChangeExistingUserPassword(ConsoleStyle $io): bool

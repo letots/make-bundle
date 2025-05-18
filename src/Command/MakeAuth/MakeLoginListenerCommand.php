@@ -77,7 +77,7 @@ class MakeLoginListenerCommand extends Command
 		$loginListenerName = 'LoginListener';
 		
 		while(class_exists('App\\EventListener\\'.$loginListenerName)) {
-			$loginListenerName = $io->ask('La classe App\\EventListener\\'.$loginListenerName.' existe déjà. Choisissez un nom de classe pour le listener. (ex: LogLoginListener). Validez sans aucune valeur pour ne pas créer de listener.', null, function(?string $answer = null): string {
+			$loginListenerName = $io->ask('La classe App\\EventListener\\'.$loginListenerName.' existe déjà. Choisissez un nom de classe pour le listener. (ex: LogLoginListener). Validez sans aucune valeur pour ne pas créer de listener.', null, function(?string $answer = null): ?string {
 				if($answer && preg_match('/^[A-Z][a-zA-Z0-9]*Listener$/', $answer) !== 1) {
 					throw new \RuntimeException("Le nom de la classe doit commencer par une majuscule, ne doit pas contenir d\'espaces ou de caractères spéciaux, et doit se terminer par 'Listener'.");
 				}
