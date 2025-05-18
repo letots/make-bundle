@@ -87,6 +87,11 @@ class MakeAssetsCommand extends Command
 		$io->text('.symfony.local.yaml');
 		
 		$this->commandService->runSymfonyCommand($output, ['tailwind:init']);
+		$this->commandService->runSymfonyCommand($output, ['tailwind:build']);
+		
+		$this->commandService->runSymfonyCommand($output, ['cache:clear']);
+		
+		$this->commandService->runSymfonyCommand($output, ['cache:warmup']);
 		
 		$io->success('Assets configurés, vous pouvez dès à présent lancer la commande <info>symfony serve</info> pour démarrer le serveur Symfony, Tailwind et SASS compilent automatiquement en mode dev. Lors du passage en production, pensez à lancer les commandes <info>php bin/console sass:build</info> et <info>php bin/console tailwind:build --minify</info> pour compiler les assets.');
 		
