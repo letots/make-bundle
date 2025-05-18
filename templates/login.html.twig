@@ -1,0 +1,33 @@
+{% extends 'security/layout.html.twig' %}
+{% trans_default_domain 'security.login' %}
+
+{% block title %}{{ parent() }} | {{ 'page_title'|trans }}{% endblock %}
+
+{% block content %}
+    <h2 class="text-3xl font-bold text-center">{{ 'ui.login'|trans({}, 'security.login') }}</h2>
+    <p class="text-sm text-center text-gray-500">{{ 'ui.please_authenticate'|trans({}, 'security.login') }}</p>
+
+    {{ form_start(form, { attr: { class: 'space-y-4' } }) }}
+
+        {{ form_row(form.email, {
+            attr: { class: 'w-full p-2 border rounded' }
+        }) }}
+
+        {{ form_row(form.password, {
+            attr: { class: 'w-full p-2 border rounded' }
+        }) }}
+
+        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+
+        <div class="flex justify-between items-center">
+            <a href="{{ path('app_login') }}" class="text-sm text-blue-600 hover:underline">
+                {{ 'form.forgot_password'|trans({}, 'security.login') }}
+            </a>
+        </div>
+
+        <button type="submit" class="w-full py-2 px-4 bg-blue-600 text-white rounded hover:bg-blue-700">
+            {{ 'form.submit'|trans({}, 'security.login') }}
+        </button>
+
+    {{ form_end(form) }}
+{% endblock %}

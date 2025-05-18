@@ -1,0 +1,49 @@
+{
+	"name": "letots/make-bundle",
+	"type": "library",
+	"description": "Extended maker bundle for Symfony : full authentication, full assets install, etc.",
+	"keywords": ["maker", "asset", "tailwind", "sass", "authentication", "2fa", "user", "Symfony", "PHP"],
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Thomas Sebert",
+			"email": "sebert.thomas19@gmail.com"
+		},
+		{
+			"name": "Symfony Community",
+			"homepage": "https://symfony.com/contributors"
+		}
+	],
+	"require": {
+		"php": ">=8.3"
+	},
+	"require-dev": {
+		"psr/log": "^1|^2|^3",
+		"symfony/console": "7.2.*",
+		"symfony/dependency-injection": "^6.4|^7.0",
+		"symfony/error-handler": "^6.4|^7.0",
+		"symfony/event-dispatcher": "^6.4|^7.0",
+		"symfony/expression-language": "^6.4|^7.0",
+		"symfony/filesystem": "7.2.*",
+		"symfony/http-kernel": "7.2.*",
+		"symfony/maker-bundle": ">=1.62.1",
+		"symfony/orm-pack": "2.4.*",
+		"symfony/password-hasher": "7.2.*",
+		"symfony/process": "7.2.*",
+		"symfony/security-bundle": "7.2.*",
+		"symfony/stopwatch": "^6.4|^7.0",
+		"symfony/ux-live-component": "^2.23",
+		"symfony/ux-toggle-password": "^2.24",
+		"symfony/validator": "^6.4|^7.0",
+		"symfony/yaml": "^6.4|^7.0"
+	},
+	"autoload": {
+		"psr-4": {
+			"LeTots\\MakeBundle\\": "src/"
+		},
+		"exclude-from-classmap": [
+			"/Tests/"
+		]
+	},
+	"minimum-stability": "stable"
+}

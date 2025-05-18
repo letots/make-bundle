@@ -1,0 +1,9 @@
+workers:
+    docker_compose: ~
+    messenger_consume_async:
+        cmd: ['symfony', 'console', 'messenger:consume', 'async', '-vv']
+        watch: ['config', 'src', 'templates', 'vendor']
+    tailwind:
+        cmd: [ 'symfony', 'console', 'tailwind:build', '--watch' ]
+    sass:
+        cmd: ['symfony', 'console', 'sass:build', '--watch']
