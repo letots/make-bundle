@@ -15,13 +15,15 @@ use Throwable;
 class CommandService
 {
 	private Filesystem $filesystem;
+	private string $projectDir;
 	private string $logDir;
 	
 	public function __construct(
-		private readonly KernelInterface $kernel,
+		KernelInterface $kernel,
 	)
 	{
 		$this->filesystem = new Filesystem();
+		$this->projectDir = $kernel->getProjectDir();
 		$this->logDir = $kernel->getProjectDir() . '/var/log/';
 	}
 	
@@ -130,7 +132,7 @@ class CommandService
 	
 	public function getProjectDir(): string
 	{
-		return $this->kernel->getProjectDir();
+		return $this->projectDir;
 	}
 	
 	public function getBundleDir(): string
@@ -223,7 +225,12 @@ class CommandService
 			foreach($packages as $key => $pack) {
 				$packages[$key] = $pack . ':' . ($version[$key] ?? '*');
 			}
-			$this->runSymfonyCli($output, ['composer', 'require', implode(' ', $packages)]);
+			
+			if ($this->hasSymfonyCli()) {
+				shell_exec('symfony composer require ' . implode(' ', $packages));
+			} else {
+				shell_exec('composer require ' . implode(' ', $packages));
+			}
 		}
 		
 		foreach($packagesDiff as $packageAlreadyPresent) {
