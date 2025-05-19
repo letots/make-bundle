@@ -48,11 +48,12 @@ class MakeAuthCommand extends Command
 		
 		// Mise en place de l'authentification OAuth (google, github, etc.)
 		
+		$this->commandService->runSymfonyCommand($output, ['cache:clear']);
+		$this->commandService->runSymfonyCommand($output, ['cache:warmup']);
+		
 		// Création d'un utilisateur admin@admin.com
 		$this->commandService->runSymfonyCommand($output, ['letots:user:create']);
 		
-		$this->commandService->runSymfonyCommand($output, ['cache:clear']);
-		$this->commandService->runSymfonyCommand($output, ['cache:warmup']);
 		
 		$io->success('Authentification fonctionnelle, vous pouvez dès à présent vous connecter.');
 		
