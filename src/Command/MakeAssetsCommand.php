@@ -86,9 +86,6 @@ class MakeAssetsCommand extends Command
 		
 		$io->text('.symfony.local.yaml');
 		
-		$this->commandService->runSymfonyCommand($output, ['cache:clear']);
-		$this->commandService->runSymfonyCommand($output, ['cache:warmup']);
-		
 		$this->commandService->runSymfonyCommand($output, ['tailwind:init']);
 		$this->commandService->runSymfonyCommand($output, ['tailwind:build']);
 		

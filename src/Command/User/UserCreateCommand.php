@@ -29,12 +29,15 @@ class UserCreateCommand extends Command
 		$io = new ConsoleStyle($input, $output);
 		$io->text('Création d\'un utilisateur en base de données');
 		
-		$entityClass = 'App\\Entity\\User';
+		$entityClassName = 'User';
 		
-		if (!class_exists($entityClass)) {
-			$io->error('L\'entité utilisateur n\'existe pas, veuillez d\'abord exécuter la commande letots:make:user');
-			return Command::FAILURE;
+		while(!class_exists('App\\Entity\\'.$entityClassName)) {
+			$entityClassName = $io->ask('La classe App\\Entity\\'.$entityClassName.' n\'existe pas. Saisissez le nom de l\'entité utilisateur.', null, function(?string $answer = null): ?string {
+				return $answer;
+			});
 		}
+		
+		$entityClass = 'App\\Entity\\' . $entityClassName;
 		
 		$userRepository = $this->entityManager->getRepository($entityClass);
 		$userExists = $userRepository->findOneBy(['email' => 'admin@admin.com']);
